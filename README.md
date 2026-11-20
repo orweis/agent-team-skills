@@ -36,9 +36,26 @@ Grok also scans `.agents/skills/`.
 **Claude Code / others:** copy into `.claude/skills/` (or the runtime's skills directory).
 
 ```bash
-git clone https://github.com/orweis/agent-team-skills
-cp -r agent-team-skills/skills/* ~/.grok/skills/
+# Pin to a release tag (or commit) and read the SKILL.md files before installing:
+# skills are instructions your agent will follow, so treat updates like code.
+git clone --depth 1 --branch v1.1.0 https://github.com/orweis/agent-team-skills
+mkdir -p ~/.grok/skills
+cp -r -n agent-team-skills/skills/* ~/.grok/skills/   # -n: never overwrite existing skills
 ```
+
+For Claude Code use `~/.claude/skills/` (or `.claude/skills/` in a project) instead.
+
+## Development and tests
+
+No dependencies are needed to validate the skills (Python 3.10+ standard library):
+
+```bash
+python3 scripts/validate.py      # frontmatter, name/description limits, links, referenced files
+python3 -m pip install pytest && python3 -m pytest -q   # test suite for the validator
+```
+
+CI runs both on every push and pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) and
+[SECURITY.md](SECURITY.md). Version history: [CHANGELOG.md](CHANGELOG.md).
 
 ## Getting started (Grok Bot)
 
@@ -62,6 +79,9 @@ cp -r agent-team-skills/skills/* ~/.grok/skills/
 - In GTM: **signal-based, context-aware** outreach that knows when *not* to reach out beats volume.
 
 Full source list: [SOURCES.md](SOURCES.md).
+
+Note: product-specific details (Grok Bot features, outbound-email thresholds, legal summaries) change
+over time; treat them as dated guidance and confirm against current vendor docs and counsel.
 
 ## License
 
