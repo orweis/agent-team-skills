@@ -40,11 +40,11 @@ Each routine: one owner Bot, one trigger, one skill, one output destination, exp
 3. Route per ownership rules; log in CRM.
 4. Non-fit: helpful resources, no hard sell; log.
 
-## R6. Meeting prep - owner: Meeting Prep - trigger: meeting on calendar (e.g. 24h before)
+## R6. Meeting prep - owner: Meeting Prep & Follow-up - trigger: meeting on calendar (e.g. 24h before)
 Brief: attendees (role, background), account context, signals, open opportunities/history,
 suggested agenda and discovery questions, relevant proof points. Delivered to the human owner.
 
-## R7. Post-meeting follow-up - owner: Meeting Prep - trigger: meeting ends / notes available
+## R7. Post-meeting follow-up - owner: Meeting Prep & Follow-up - trigger: meeting ends / notes available
 Summary, decisions, commitments, next steps + dates -> CRM; follow-up email draft for approval.
 
 ## R8. Weekly GTM review - owner: GTM Analyst + you - trigger: weekly
