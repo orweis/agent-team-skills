@@ -14,25 +14,34 @@ NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 MAX_DESC = 1024
 MAX_NAME = 64
 LINK_RE = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)\)")
-REF_RE = re.compile(r"`((?:references|templates)/[A-Za-z0-9_./-]+\.md)`")
+REF_RE = re.compile(r"`((?:[a-z0-9-]+/)?(?:references|templates)/[A-Za-z0-9_./-]+\.md)`")
 FENCE_RE = re.compile(r"^(```|~~~)")
 
 
 def parse_frontmatter(text: str) -> tuple[dict[str, str], str | None]:
-    """Return (fields, error). Handles simple `key: value` scalars only."""
+    """Return (fields, error). Handles `key: value` scalars, quotes and indented continuations."""
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
         return {}, "missing opening '---' frontmatter delimiter"
     for i in range(1, len(lines)):
         if lines[i].strip() == "---":
             fields: dict[str, str] = {}
+            key = None
             for line in lines[1:i]:
                 if not line.strip():
+                    continue
+                if line[0] in " \t" and key:  # indented continuation of previous value
+                    fields[key] = (fields[key] + " " + line.strip()).strip()
                     continue
                 if ":" not in line:
                     return {}, f"malformed frontmatter line: {line!r}"
                 k, v = line.split(":", 1)
-                fields[k.strip()] = v.strip()
+                key, v = k.strip(), v.strip()
+                if v in (">", "|", ">-", "|-", ">+", "|+"):
+                    v = ""  # block scalar: value follows on indented lines
+                elif len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'":
+                    v = v[1:-1]
+                fields[key] = v
             return fields, None
     return {}, "missing closing '---' frontmatter delimiter"
 
@@ -86,10 +95,13 @@ def check_skill(skill_dir: Path, root: Path) -> list[str]:
         errs.append(f"{skill_md}: missing 'description'")
     elif len(desc) > MAX_DESC:
         errs.append(f"{skill_md}: description is {len(desc)} chars (max {MAX_DESC})")
-    for ref in sorted(set(REF_RE.findall(text))):
-        if not (skill_dir / ref).is_file():
-            errs.append(f"{skill_md}: referenced file not found: {ref}")
     for md in sorted(skill_dir.rglob("*.md")):
+        for ref in sorted(set(REF_RE.findall(md.read_text(encoding="utf-8")))):
+            # `<skill>/references/x.md` resolves against skills/; bare paths against this skill.
+            first = ref.split("/", 1)[0]
+            base = root / "skills" if first not in ("references", "templates") else skill_dir
+            if not (base / ref).is_file():
+                errs.append(f"{md}: referenced file not found: {ref}")
         errs.extend(check_links(md, root))
     return errs
 

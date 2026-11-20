@@ -15,11 +15,13 @@ No breaking changes.
 - `scripts/validate.py` (stdlib-only) and a pytest suite validating frontmatter, links and
   referenced files; GitHub Actions CI with read-only permissions.
 - CONTRIBUTING.md, SECURITY.md, .editorconfig, .gitignore.
-- README: pinned install instructions, development and test section.
+- README: upgrade instructions, development and test section.
+- Validator checks backticked `references/`, `templates/` and cross-skill paths in every skill
+  Markdown file, and accepts quoted and folded frontmatter values.
 
 ### Fixed
 - Meeting Prep Bot named consistently ("Meeting Prep & Follow-up") in `gtm-routines.md`.
 
-## [1.0.0]
+## [1.0.0] - untagged baseline (commit b180981)
 
 - Initial release: `agent-team-manager` and `gtm-team-manager` skills.

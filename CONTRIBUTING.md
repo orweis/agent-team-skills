@@ -1,7 +1,7 @@
 # Contributing
 
 1. Edit skills under `skills/<name>/`. Each needs a `SKILL.md` with `name` (equal to the directory
-   name, lowercase-hyphen) and `description` (at most 1024 characters) frontmatter.
+   name, lowercase-hyphen) and `description` (at most 1024 characters) frontmatter (single-line, quoted or `>` folded scalars are supported).
 2. Run `python3 scripts/validate.py` and `python3 -m pytest -q`; both must pass.
 3. Add a CHANGELOG entry. Renaming or removing referenced files is a breaking change (major bump
    and migration note).

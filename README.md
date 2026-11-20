@@ -36,12 +36,15 @@ Grok also scans `.agents/skills/`.
 **Claude Code / others:** copy into `.claude/skills/` (or the runtime's skills directory).
 
 ```bash
-# Pin to a release tag (or commit) and read the SKILL.md files before installing:
-# skills are instructions your agent will follow, so treat updates like code.
-git clone --depth 1 --branch v1.1.0 https://github.com/orweis/agent-team-skills
+# Read the SKILL.md files before installing: skills are instructions your agent will follow,
+# so treat updates like code. Optionally pin to a commit (git checkout <sha>) once reviewed.
+git clone --depth 1 https://github.com/orweis/agent-team-skills
 mkdir -p ~/.grok/skills
-cp -r -n agent-team-skills/skills/* ~/.grok/skills/   # -n: never overwrite existing skills
+cp -r agent-team-skills/skills/* ~/.grok/skills/   # fresh install; overwrites same-named files
 ```
+
+To upgrade, remove the old copy of each skill first so no stale files linger
+(`rm -rf ~/.grok/skills/agent-team-manager ~/.grok/skills/gtm-team-manager`), then copy again.
 
 For Claude Code use `~/.claude/skills/` (or `.claude/skills/` in a project) instead.
 

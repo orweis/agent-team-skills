@@ -1,4 +1,5 @@
 import importlib.util
+import re
 import sys
 from pathlib import Path
 
@@ -109,11 +110,35 @@ def test_main_exit_codes(tmp_path, capsys):
 
 
 def test_bot_names_consistent_in_gtm_files():
-    # The roster name used in routines must match the roster/roles name.
+    # Every routine owner must be a Bot in the SKILL.md roster table.
     gtm = ROOT / "skills" / "gtm-team-manager"
     skill = (gtm / "SKILL.md").read_text()
-    for f in ("gtm-routines.md",):
-        text = (gtm / "references" / f).read_text()
-        if "owner: Meeting Prep" in text:
-            assert "Meeting Prep & Follow-up" in skill
-            assert "owner: Meeting Prep -" not in text
+    roster = set(re.findall(r"^\| \*\*(.+?)\*\* \|", skill, re.M))
+    assert roster
+    text = (gtm / "references" / "gtm-routines.md").read_text()
+    owners = re.findall(r"owner: (.+?) - trigger", text)
+    assert owners
+    for owner in owners:
+        for name in re.split(r" or | \+ ", owner):
+            name = name.strip()
+            if name != "you":
+                assert name in roster or any(r.startswith(name) for r in roster), name
+
+
+def test_folded_and_quoted_frontmatter(tmp_path):
+    make_skill(tmp_path)
+    md = tmp_path / "skills" / "demo" / "SKILL.md"
+    md.write_text('---\nname: demo\ndescription: >\n  line one\n  line two\n---\nbody\n')
+    assert v.validate(tmp_path) == []
+    md.write_text('---\nname: "demo"\ndescription: "quoted"\n---\nbody\n')
+    assert v.validate(tmp_path) == []
+
+
+def test_broken_ref_in_references_file_and_cross_skill(tmp_path):
+    make_skill(tmp_path)
+    ref = tmp_path / "skills" / "demo" / "references"
+    ref.mkdir()
+    (ref / "a.md").write_text("see `templates/nope.md`\n")
+    assert any("nope.md" in e for e in v.validate(tmp_path))
+    (ref / "a.md").write_text("see `other/templates/nope.md`\n")
+    assert any("other/templates/nope.md" in e for e in v.validate(tmp_path))
