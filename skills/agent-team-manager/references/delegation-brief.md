@@ -34,7 +34,7 @@ SCOPE
 IN:  <...>
 OUT: <... explicitly excluded>
 
-TOOLS & SOURCES
+TOOLS & SOURCES (name connectors/accounts only; never paste credentials)
 Use: <...>   Avoid: <...>   Source quality bar: <e.g. primary sources, < 12 months old>
 
 EFFORT BUDGET / STOPPING RULE

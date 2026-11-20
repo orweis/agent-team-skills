@@ -10,7 +10,7 @@
 | Inputs (from whom / what triggers) | |
 | Outputs (what, where, format) | |
 | Hands off to | |
-| Tools / connectors / accounts | |
+| Tools / connectors / accounts (names only; never credentials) | |
 | Skills | |
 | Routines (trigger -> skill) | |
 | Memory: what it must remember | |
@@ -23,6 +23,8 @@
 | e.g. draft email | L2 | sample 20% | - |
 | e.g. send email | L1 | Ask first | 20 approvals w/o edits |
 | e.g. update CRM field | L2 | Auto-review | - |
+
+Promotions and any relaxed approval rule must be approved by the human.
 
 ## Standing rules
 1. <Rule learned from feedback - date added - why>
